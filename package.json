@@ -1,0 +1,30 @@
+{
+  "name": "ssd_assignment02",
+  "version": "1.0.0",
+  "main": "index.js",
+  "dependencies": {
+    "@sendgrid/mail": "^7.2.6",
+    "ejs": "^3.1.5",
+    "env-cmd": "^10.1.0",
+    "express": "^4.17.1",
+    "googleapis": "^39.2.0",
+    "node-json2html": "^1.4.0",
+    "nodemon": "^2.0.3"
+  },
+  "devDependencies": {},
+  "scripts": {
+    "start": "node src/app.js",
+    "dev": "env-cmd -f ./config/dev.env node src/app.js"
+  },
+  "author": "",
+  "license": "ISC",
+  "description": "OAuth assignment",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/shashperera/SSD_Assignment02.git"
+  },
+  "bugs": {
+    "url": "https://github.com/shashperera/SSD_Assignment02/issues"
+  },
+  "homepage": "https://github.com/shashperera/SSD_Assignment02#readme"
+}
