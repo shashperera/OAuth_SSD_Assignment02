@@ -1,0 +1,42 @@
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Google Calander</title>
+  <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css"> <!-- load bulma css -->
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css"> <!-- load fontawesome styles -->
+    
+  <link rel="stylesheet" href="../css/app.css">  <!--load css file -->
+</head>
+<body>
+    <div class="container">
+        <div class="jumbotron text-center text-dark">
+            <h1 class="title"><span class="fa fa-user"></span> Event Management</h1>
+            <div class="card p-5">
+                <form action="http://localhost:3000/" method="POST"> <!--use post method -->
+                  <h1><span class="fa fa-google"></span><a class="btn btn-primary" target="_blank" rel="noopener noreferrer" href="https://accounts.google.com/o/oauth2/v2/auth/oauthchooseaccount?access_type=offline&scope=https%3A%2F%2Fwww.googleapis.com%2Fauth%2Fcalendar.readonly&response_type=code&client_id=589246716458-7c5gq4437g7mtlrlbps8hnml1f9bdjtu.apps.googleusercontent.com&redirect_uri=urn%3Aietf%3Awg%3Aoauth%3A2.0%3Aoob&flowName=GeneralOAuthFlow">
+                     Sign in with Google</a></h1><br><br>
+
+                    <label for="token">Paste your copied token here</label>
+                    <input name="token" type="text" placeholder="should be like this Jw65AJg05xiOGmkCld...">
+                    <input type="submit" value="Get my events"></input>
+                  </form>
+                  <hr>
+                  <form action="http://localhost:3000/events" method="POST">
+                    <label for="attendee email">Attendee email</label>
+                    <input type="email" name="to" placeholder="send your email invite to...">
+                    <label for="event title">Event Title</label>
+                    <input type="text" name="summary" placeholder="the title of event...">
+                    <label for="body">Event body</label>
+                    <input type="text" name="description" placeholder="the message ...">
+                    <input type="submit" value="Send Event Invite">
+                  </form>            </div>
+        </div>
+    </div>
+    <div class="container" >
+  <div class="card" style="width: 40%; margin:0 auto;" >
+    
+  </div>
+</div>
+</body>
+</html>
