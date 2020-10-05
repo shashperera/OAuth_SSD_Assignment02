@@ -4,24 +4,24 @@ const app = express()
 const path = require('path')
 const bodyParser = require('body-parser');
 
-var var_arr=['Extracting finished. Refresh the browser to see your Google events'];
+var var_arr = ['Extracting finished. Refresh the browser to see your Google events'];
 
 app.use(express.static(path.join(__dirname, 'public')))
 app.set('views', __dirname + '/public/views');
 app.engine('html', require('ejs').renderFile);
 app.set('view engine', 'html');
-app.use(bodyParser.urlencoded({extended: true}));
+app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json());
 
-app.get('/', (req, res) =>{
+app.get('/', (req, res) => {
   res.render('index.html');
 })
 
 app.post('/', (req, res) => {
-  const tkn=req.body.token;
+  const tkn = req.body.token;
   const fs = require('fs');
   const readline = require('readline');
-  const {google} = require('googleapis');
+  const { google } = require('googleapis');
 
   const SCOPES = ['https://www.googleapis.com/auth/calendar.readonly'];
   // The file token.json stores the user's access and refresh tokens, and is
@@ -43,9 +43,9 @@ app.post('/', (req, res) => {
    * @param {function} callback The callback to call with the authorized client.
    */
   function authorize(credentials, callback) {
-    const {client_secret, client_id, redirect_uris} = credentials.installed;
+    const { client_secret, client_id, redirect_uris } = credentials.installed;
     const oAuth2Client = new google.auth.OAuth2(
-        client_id, client_secret, redirect_uris[0]);
+      client_id, client_secret, redirect_uris[0]);
 
     // Check if we have previously stored a token.
     fs.readFile(TOKEN_PATH, (err, token) => {
@@ -71,7 +71,7 @@ app.post('/', (req, res) => {
       input: process.stdin,
       output: process.stdout,
     });
- 
+
     oAuth2Client.getToken(tkn, (err, token) => {
       if (err) return console.error('Error retrieving access token', err);
       oAuth2Client.setCredentials(token);
@@ -89,35 +89,35 @@ app.post('/', (req, res) => {
    * @param {google.auth.OAuth2} auth An authorized OAuth2 client.
    */
   function listEvents(auth) {
-    async function fun(){
-    const calendar = await google.calendar({version: 'v3', auth});
-    calendar.events.list({
-      calendarId: 'primary', //events created in primary calendar
-      timeMin: (new Date()).toISOString(),
-      maxResults: 30,
-      singleEvents: true,
-      orderBy: 'startTime',
-    }, (err, res) => {
-      if (err) return console.log('The API has returned an error: ' + err);
-      const events = res.data.items;
-      if (events.length) {
-        console.log('These are your upcoming events:', events);
-        events.map((event, i) => {
-          var_arr.push(event);
-        });
-      } else {
-        console.log('No upcoming events have been found.');
-      }
-    });
-  }
-  fun()
+    async function fun() {
+      const calendar = await google.calendar({ version: 'v3', auth });
+      calendar.events.list({
+        calendarId: 'primary', //events created in primary calendar
+        timeMin: (new Date()).toISOString(),
+        maxResults: 30,
+        singleEvents: true,
+        orderBy: 'startTime',
+      }, (err, res) => {
+        if (err) return console.log('The API has returned an error: ' + err);
+        const events = res.data.items;
+        if (events.length) {
+          console.log('These are your upcoming events:', events);
+          events.map((event, i) => {
+            var_arr.push(event);
+          });
+        } else {
+          console.log('No upcoming events have been found.');
+        }
+      });
+    }
+    fun()
   }
   res.send(var_arr)
   res.render('index.html') //Render index page
 });
 
 
-app.post('/events', (req, res) =>{
+app.post('/events', (req, res) => {
   // Require google from googleapis package.
   const { google } = require('googleapis')
   // Require oAuth2 from our google instance.
@@ -183,33 +183,33 @@ app.post('/events', (req, res) =>{
             // Else send the successfull message 
             return console.log('Event has been created successfully.')
           })
-        }
+      }
       // If event array is not empty log that we are busy.
       return console.log(`Sorry the schedule is busy for now`)
     }
   )
   console.log(req.body)
- // using Twiloio SendGrid's v3 Node.js Library
-// https://github.com/sendgrid/sendgrid-nodejs
-const sgMail = require('@sendgrid/mail')
-sgMail.setApiKey(process.env.SENDGRID_API_KEY)
-const msg = {
-  to: req.body.to, // the receipient
-  from: 'it17097598@xx.xxx.com', // change to the verified sender
-  subject: req.body.description, //the message body of the email invite
-  text: req.body.description,
-}
-sgMail
-  .send(msg)
-  .then(() => {
-    console.log('Email sent')
-  })
-  .catch((error) => {
-    console.error(error)
-  })
+  // using Twiloio SendGrid's v3 Node.js Library
+  // https://github.com/sendgrid/sendgrid-nodejs
+  const sgMail = require('@sendgrid/mail')
+  sgMail.setApiKey(process.env.SENDGRID_API_KEY)
+  const msg = {
+    to: req.body.to, // the receipient
+    from: 'it17097598@xx.xxx.com', // change to the verified sender
+    subject: req.body.description, //the message body of the email invite
+    text: req.body.description,
+  }
+  sgMail
+    .send(msg)
+    .then(() => {
+      console.log('Email sent')
+    })
+    .catch((error) => {
+      console.error(error)
+    })
   res.render('events.html')
 })
 
-app.listen(3000, () =>{
+app.listen(3000, () => {
   console.log('Server is running on port 3000') //server port
 })
