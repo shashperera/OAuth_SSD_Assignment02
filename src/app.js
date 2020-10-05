@@ -29,7 +29,7 @@ app.post('/', (req, res) => {
   // time.
   const TOKEN_PATH = 'token.json';
 
-  // Load client secrets from a local file.
+  // Get the client secrets from a local json file.
   fs.readFile('credentials.json', (err, content) => {
     if (err) return console.log('Error loading client secret file:', err);
     // Authorize a client with credentials, then call the Google Calendar API.
@@ -92,28 +92,28 @@ app.post('/', (req, res) => {
     async function fun(){
     const calendar = await google.calendar({version: 'v3', auth});
     calendar.events.list({
-      calendarId: 'primary',
+      calendarId: 'primary', //events created in primary calendar
       timeMin: (new Date()).toISOString(),
       maxResults: 30,
       singleEvents: true,
       orderBy: 'startTime',
     }, (err, res) => {
-      if (err) return console.log('The API returned an error: ' + err);
+      if (err) return console.log('The API has returned an error: ' + err);
       const events = res.data.items;
       if (events.length) {
-        console.log('Your upcoming events:', events);
+        console.log('These are your upcoming events:', events);
         events.map((event, i) => {
           var_arr.push(event);
         });
       } else {
-        console.log('No upcoming events found.');
+        console.log('No upcoming events have been found.');
       }
     });
   }
   fun()
   }
   res.send(var_arr)
-  res.render('index.html')
+  res.render('index.html') //Render index page
 });
 
 
@@ -126,24 +126,24 @@ app.post('/events', (req, res) =>{
   // Create a new instance of oAuth and set our Client ID & Client Secret.
   const oAuth2Client = new OAuth2(process.env.CLIENT_ID, process.env.CLIENT_SECRET)
 
-  // Call the setCredentials method on our oAuth2Client instance and set our refresh token.
+  // Set the refresh token after calling the setCredentials method on the oAuth2Client instance
   oAuth2Client.setCredentials({
     refresh_token: process.env.REFRESH_TOKEN,
   })
 
-  // Create a new calender instance.
+  // Make a new google calender instance.
   const calendar = google.calendar({ version: 'v3', auth: oAuth2Client })
 
-  // Create a new event start date instance for temp uses in our calendar.
+  // Creating start date
   const eventStartTime = new Date()
   eventStartTime.setDate(eventStartTime.getDay() + 2)
 
-  // Create a new event end date instance for temp uses in our calendar.
+  // Creating a new event and date instances
   const eventEndTime = new Date()
   eventEndTime.setDate(eventEndTime.getDay() + 2)
   eventEndTime.setMinutes(eventEndTime.getMinutes() + 60)
 
-  // Create a dummy event for temp uses in our calendar
+  // event details 
   const event = {
     summary: `${req.body.summary}`,
     description: `${req.body.description}`,
@@ -156,7 +156,7 @@ app.post('/events', (req, res) =>{
     },
   }
 
-  // Check if we a busy and have an event on our calendar for the same time.
+  // The query to check whether the calendar is busy with events
   calendar.freebusy.query(
     {
       resource: {
@@ -166,21 +166,21 @@ app.post('/events', (req, res) =>{
       },
     },
     (err, res) => {
-      // Check for errors in our query and log them if they exist.
+      // Log the errors in the busy query
       if (err) return console.error('Free Busy Query Error: ', err)
 
-      // Create an array of all events on our calendar during that time.
+      // all events of the calendar at the time is stored in eventarr
       const eventArr = res.data.calendars.primary.busy
 
-      // Check if event array is empty which means we are not busy
+      // Checking whether eventarr is busy or not
       if (eventArr.length === 0) {
-        // If we are not busy create a new calendar event.
+        // Create a new calendar event if not busy
         return calendar.events.insert(
           { calendarId: 'primary', resource: event },
           err => {
-            // Check for errors and log them if they exist.
+            // Send an error message if any error occurs
             if (err) return console.error('Error Creating Your Calender Event:', err)
-            // Else log that the event was created.
+            // Else send the successfull message 
             return console.log('Event has been created successfully.')
           })
         }
@@ -189,14 +189,14 @@ app.post('/events', (req, res) =>{
     }
   )
   console.log(req.body)
- // using Twilio SendGrid's v3 Node.js Library
+ // using Twiloio SendGrid's v3 Node.js Library
 // https://github.com/sendgrid/sendgrid-nodejs
 const sgMail = require('@sendgrid/mail')
 sgMail.setApiKey(process.env.SENDGRID_API_KEY)
 const msg = {
-  to: req.body.to, // Change to your recipient
-  from: 'it17097598@my.sliit.lk', // Change to your verified sender
-  subject: req.body.description,
+  to: req.body.to, // the receipient
+  from: 'it17097598@xx.xxx.com', // change to the verified sender
+  subject: req.body.description, //the message body of the email invite
   text: req.body.description,
 }
 sgMail
@@ -211,5 +211,5 @@ sgMail
 })
 
 app.listen(3000, () =>{
-  console.log('Server is running on port 3000')
+  console.log('Server is running on port 3000') //server port
 })
