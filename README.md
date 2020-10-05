@@ -11,3 +11,20 @@ Instructions to follow
    REFRESH_TOKEN=OAuth 2.0 Playground refresh token
 5) npm run dev
 6) View the event created from console and calendar and the email is sent to the attendees.
+
+### Folder Structure
+```
+.
+    ├── config                   # Configuration files 
+    │   ├── dev.env          
+    ├── src   
+    │   ├── public               
+    │       ├── css 
+    │           ├── app.css      #css files
+    │       ├── views            # Views
+    │           ├── events.html   
+    │           ├── index.html
+    │   ├── app.js 
+    ├── credentials.json
+    ├── package.json
+    └── README.md                #guidelines
